@@ -77,7 +77,7 @@ def loginAuth():
         hashedPassword = hashlib.sha256(plaintextPasword.encode("utf-8")).hexdigest()
 
         with connection.cursor() as cursor:
-            query = "SELECT * FROM person WHERE username = %s AND password = %s"
+            query = "SELECT * FROM user WHERE username = %s AND password = %s"
             cursor.execute(query, (username, hashedPassword))
         data = cursor.fetchone()
         if data:
@@ -97,21 +97,18 @@ def registerAuth():
         username = requestData["username"]
         plaintextPasword = requestData["password"]
         hashedPassword = hashlib.sha256(plaintextPasword.encode("utf-8")).hexdigest()
-        firstName = requestData["fname"]
-        lastName = requestData["lname"]
-        
         try:
             with connection.cursor() as cursor:
-                query = "INSERT INTO person (username, password, fname, lname) VALUES (%s, %s, %s, %s)"
-                cursor.execute(query, (username, hashedPassword, firstName, lastName))
+                query = "INSERT INTO user (username, password) VALUES (%s, %s)"
+                print(hashedPassword)
+                cursor.execute(query, (username, hashedPassword))
         except pymysql.err.IntegrityError:
+            print("B")
             error = "%s is already taken." % (username)
-            return render_template('register.html', error=error)    
-
+            return render_template('register.html')    
         return redirect(url_for("login"))
-
     error = "An error has occurred. Please try again."
-    return render_template("register.html", error=error)
+    return render_template("register.html")
 
 @app.route("/logout", methods=["GET"])
 def logout():
