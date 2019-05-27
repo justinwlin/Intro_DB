@@ -1,0 +1,90 @@
+<html>
+<head>
+</head>
+<body>
+<a href="/">Home | </a>
+<a href="/tags">Manage Tags | </a>
+<a href="/groups">Manage Groups | </a>
+<a href="/follow">Manage Follows | </a>
+<a href="/logout">Logout</a>
+
+<form action="./addtags" method="POST">
+	<h1>Welcome {{username}}</h1>
+    <select name = "photoID">
+		{% for ID in IDS %}
+		<option value = {{ID}}> {{ID}}</option>
+		{% endfor %}
+	</select>
+	<input type="text" name = "username" placeholder="Person To Tag" required/>
+    <input type="submit" value = Tag>
+</form>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      {{message}}
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+</style>
+
+<!-- PHOTOS YOU OWN -->
+<b>Photos you Own:</b>
+<table>
+<tr> 	
+    <th> time stamp </th>
+    <th> photoID</th>
+    <th> caption </th>
+    <th> Photo </th>
+    <th> Tagged People </th>
+</tr>
+{% for item in posts %}
+<tr>
+	<td>{{item.ts}}</td>
+    <td>{{item.ID}}</td>
+	<td>{{item.caption}}</td>	
+	<td> <img style="max-height: 150px; max-width: 150px" src ="{{item.url}}"></td>
+	<td>{{item.tagPpl}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- PHOTOS YOU OWN -->
+<b>Tag Requests: </b>
+<table>
+<tr>
+<th> Owner </th>
+<th> Photo ID </th>
+<th> Photo </th>
+<th> ACCEPT </th>
+<th> DECLINE </th>
+</tr>
+{% for req in reqs %}
+<tr>
+	<td>{{req.owner}}</td>
+    <td>{{req.photoID}}</td>
+	<td> <img style="max-height: 150px; max-width: 150px" src ="{{req.photo}}"></td>
+    <td>
+        <form action="{{ url_for('routes.acceptTag', photoID = req.photoID) }}" method=post>
+            <input type=submit value=Accept>
+        </form>
+    </td>
+    <td>
+        <form action="{{ url_for('routes.declineTag', photoID = req.photoID) }}" method=post>
+            <input type=submit value=Decline>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>

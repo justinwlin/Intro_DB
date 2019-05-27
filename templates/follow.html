@@ -1,0 +1,104 @@
+<html>
+<head>
+</head>
+<body>
+<a href="/">Home | </a>
+<a href="/tags">Manage Tags | </a>
+<a href="/groups">Manage Groups | </a>
+<a href="/follow">Manage Follows | </a>
+<a href="/logout">Logout</a>
+
+<form action="/followAuth" method="POST">
+	<h1>Welcome {{username}}</h1> 
+	<input type="text" name = "follow" placeholder="Enter Username for person you want to follow" required/>
+    <input type="submit" value = Ask>
+</form>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      {{message}}
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+</style>
+
+<b>People Asking to Follow: </b>
+<table>
+<tr>
+    <th> Username </th>
+    <th> Accept </th>
+    <th> Decline </th>
+</tr>
+{% for req in requests %}
+<tr>
+	<td>{{req["user"]}}</td>
+    <td>
+        <form action="{{ url_for('routes.acceptRequest', follower= req["user"]) }}" method=post>
+            <input type=submit value=Accept>
+        </form>
+    </td>
+    <td>
+        <form action="{{ url_for('routes.declineRequest', follower = req["user"]) }}" method=post>
+            <input type=submit value=Decline>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- PEOPLE ASKING TO FOLLOW -->
+<!--
+<b>People Asking to Follow You:</b>
+<table>
+<tr> 	
+    <th> Username </th>
+    <th> Accept </th>
+    <th> Decline </th>
+</tr>
+{% for request in requests %}
+<tr>
+    <td>{{request["user"]}}</td>
+</tr>
+{% endfor %}
+</table>
+-->
+
+<!-- PEOPLE FOLLOWING YOU-->
+<b>People Currently Following You:</b>
+<table>
+<tr> 	
+	<th> Username </th>
+</tr>
+{% for follower in followers %}
+<tr>
+    <td>{{follower["user"]}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- PEOPLE YOU FOLLOW -->
+<b>You Follow:</b>
+<table>
+<tr> 	
+	<th> Username </th>
+</tr>
+{% for follow in follows %}
+<tr>
+    <td>{{follow["user"]}}</td>
+</tr>
+{% endfor %}
+</table>
+
+
+</body>
+
+
+</html>

@@ -1,0 +1,49 @@
+<html>
+<head>
+</head>
+<body>
+<a href="/">Home | </a>
+<a href="/tags">Manage Tags | </a>
+<a href="/groups">Manage Groups | </a>
+<a href="/follow">Manage Follows | </a>
+<a href="/logout">Logout</a>
+
+<!-- Add People to Group-->
+<form action="/addgroup" method="POST">
+	<input type="text" name = "username" placeholder="Username add to Group" required/>
+    <input type=hidden value="{{ group}}" name=groupName></input>
+    <input type="submit" value = add />
+</form>
+
+<!-- Messages -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      {{message}}
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+</style>
+
+<!-- People in the Group-->
+
+<b>People in {{group}}</b>
+<table>
+<tr> 	
+    <th> Usernames </th>
+</tr>
+{% for person in people %}
+<tr>
+    <td>
+      {{person["username"]}}
+    </td>
+</tr>
+{% endfor %}
+</table>
